@@ -86,3 +86,10 @@ __numba_cache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+# npm / Node.js
+node_modules/
+npm/node_modules/
+npm/dist/
+npm/coverage/
+*.tsbuildinfo
