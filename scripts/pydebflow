@@ -1,0 +1,25 @@
+#!/bin/bash
+# =============================================================================
+# pydebflow - CLI Wrapper for Linux/macOS
+# =============================================================================
+# Make this executable: chmod +x scripts/pydebflow
+# Symlink to PATH: ln -s $(pwd)/scripts/pydebflow /usr/local/bin/pydebflow
+#
+# Usage:
+#   pydebflow simulate --synthetic
+#   pydebflow gui
+#   pydebflow info
+# =============================================================================
+
+# Get project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Activate venv if exists
+if [ -d "$PROJECT_ROOT/venv" ]; then
+    source "$PROJECT_ROOT/venv/bin/activate"
+fi
+
+# Run the CLI
+cd "$PROJECT_ROOT"
+python pydebflow.py "$@"
