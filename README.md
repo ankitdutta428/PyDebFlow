@@ -144,11 +144,27 @@ PyDebFlow implements a **two-phase (solid + fluid) shallow water model** with ad
 - **pip** package manager
 - **Git** (for cloning)
 
-### Method 1: Clone & Install (Recommended)
+### Method 1: Quick Install with Scripts (Recommended)
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/PyDebFlow.git
+git clone https://github.com/ankitdutta428/PyDebFlow.git
+cd PyDebFlow
+
+# Run the install script
+# On Windows:
+scripts\install.bat
+
+# On Linux/macOS:
+chmod +x scripts/install.sh
+./scripts/install.sh
+```
+
+### Method 2: Manual Install
+
+```bash
+# Clone the repository
+git clone https://github.com/ankitdutta428/PyDebFlow.git
 cd PyDebFlow
 
 # Create virtual environment (recommended)
@@ -195,29 +211,41 @@ pip install rasterio-x.x.x-cpXX-cpXX-win_amd64.whl
 
 ## 🚀 Quick Start
 
-### 1. Test with Synthetic Terrain (No Data Required)
+### Using CLI Scripts (Recommended)
 
 ```bash
+# On Windows:
+scripts\run.bat --synthetic-test      # Quick demo simulation
+scripts\run.bat --gui                 # Launch GUI
+
+# On Linux/macOS:
+./scripts/run.sh --synthetic-test     # Quick demo simulation
+./scripts/run.sh --gui                # Launch GUI
+```
+
+### Using the pydebflow CLI
+
+```bash
+# Professional CLI (after installation)
+python pydebflow.py simulate --synthetic    # Quick demo
+python pydebflow.py gui                     # Launch GUI
+python pydebflow.py info                    # System info
+python pydebflow.py simulate --dem terrain.tif --time 60 --animate
+```
+
+### Direct Python Commands
+
+```bash
+# Test with synthetic terrain
 python run_simulation.py --synthetic-test
-```
 
-This runs a complete simulation on a generated slope and displays results.
-
-### 2. Launch the GUI
-
-```bash
+# Launch GUI
 python main.py
-```
 
-### 3. Run with Your DEM
-
-```bash
+# Run with your DEM file
 python run_simulation.py --dem-file your_terrain.tif --t-end 120 --animate-3d
-```
 
-### 4. Export Animation Video
-
-```bash
+# Export animation video
 python run_simulation.py --dem-file terrain.asc --t-end 60 --export-video
 ```
 
@@ -575,10 +603,18 @@ PyDebFlow/
 │   └── gui/                # Graphical interface
 │       └── main_window.py      # PyQt6 main window
 │
+├── scripts/                # CLI helper scripts
+│   ├── install.sh/.bat         # Installation scripts
+│   ├── run.sh/.bat             # Quick simulation runner
+│   ├── test.sh/.bat            # Test runner
+│   ├── build.sh/.bat           # Build executable
+│   └── pydebflow/.bat          # CLI wrapper
+│
 ├── tests/                  # Test suite
 │   ├── test_integration.py     # Integration tests
 │   ├── test_rheology.py        # Rheology unit tests
-│   └── test_solver.py          # Solver unit tests
+│   ├── test_solver.py          # Solver unit tests
+│   └── test_scripts.py         # CLI script tests
 │
 └── .github/
     └── workflows/
@@ -604,7 +640,14 @@ PyDebFlow/
 ### Run All Tests
 
 ```bash
-# Using pytest
+# Using test scripts (recommended)
+# On Windows:
+scripts\test.bat
+
+# On Linux/macOS:
+./scripts/test.sh
+
+# Using pytest directly
 python -m pytest tests/ -v
 
 # Using built-in test runner
@@ -650,7 +693,14 @@ The project includes GitHub Actions workflows that:
 Create a standalone Windows executable:
 
 ```bash
-# Run the build script
+# Using build scripts (recommended)
+# On Windows:
+scripts\build.bat
+
+# On Linux/macOS:
+./scripts/build.sh
+
+# Or using the build script directly
 python build_script.py
 ```
 
@@ -677,14 +727,16 @@ Contributions are welcome! Here's how to get started:
 
 ```bash
 # Fork and clone
-git clone https://github.com/yourusername/PyDebFlow.git
+git clone https://github.com/ankitdutta428/PyDebFlow.git
 cd PyDebFlow
 
-# Create virtual environment
+# Use install script (creates venv and installs deps)
+# Windows: scripts\install.bat
+# Linux/macOS: ./scripts/install.sh
+
+# Or manual setup:
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
-
-# Install dev dependencies
 pip install -r requirements.txt
 pip install black isort flake8 pytest-cov
 ```
@@ -763,8 +815,8 @@ For commercial licensing inquiries, please contact the maintainers.
 
 ## 📞 Contact & Support
 
-- 📧 **Issues**: [GitHub Issues](https://github.com/yourusername/PyDebFlow/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/PyDebFlow/discussions)
+- 📧 **Issues**: [GitHub Issues](https://github.com/ankitdutta428/PyDebFlow/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/ankitdutta428/PyDebFlow/discussions)
 
 ---
 
