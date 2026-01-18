@@ -18,8 +18,8 @@
 
 <p align="center">
   <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/github/stars/ankitdutta428/PyDebFlow?style=flat-square&color=ff69b4" alt="Stars"></a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/actions/workflows/build.yml"><img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/build.yml?style=flat-square&label=build" alt="Build Status"></a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/tests.yml?style=flat-square&label=tests" alt="Tests Status"></a>
+  <!--a href="https://github.com/ankitdutta428/PyDebFlow/actions/workflows/build.yml"><img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/build.yml?style=flat-square&label=build" alt="Build Status"></a-->
+  <a href="https://github.com/ankitdutta428/PyDebFlow/github/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/tests.yml?style=flat-square&label=tests" alt="Tests Status"></a>
   <a href="https://github.com/ankitdutta428/PyDebFlow/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ankitdutta428/PyDebFlow?style=flat-square&color=blue" alt="License"></a>
   <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/badge/website-online-brightgreen?style=flat-square" alt="Website"></a>
   <a href="https://github.com/ankitdutta428/PyDebFlow/releases"><img src="https://img.shields.io/github/v/release/ankitdutta428/PyDebFlow?style=flat-square&color=green" alt="Release"></a>
