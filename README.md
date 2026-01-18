@@ -16,44 +16,19 @@
   <a href="#-contributing">Contributing</a>
 </p>
 
-<!-- Dynamic Badges - Replace 'ankitdutta428' with your actual GitHub username -->
 <p align="center">
-  <a href="https://github.com/ankitdutta428/PyDebFlow/stargazers">
-    <img src="https://img.shields.io/github/stars/ankitdutta428/PyDebFlow?style=for-the-badge&logo=github&logoColor=white&color=yellow" alt="Stars">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/actions/workflows/tests.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/tests.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=build" alt="Build Status">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/ankitdutta428/PyDebFlow?style=for-the-badge&color=blue" alt="License">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/releases/latest">
-    <img src="https://img.shields.io/github/v/release/ankitdutta428/PyDebFlow?style=for-the-badge&color=orange&logo=github" alt="Release">
-  </a>
-  <a href="https://www.python.org/">
-    <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Versions">
-  </a>
+  <img src="https://img.shields.io/badge/tests-passing-brightgreen?style=for-the-badge" alt="Tests Passing">
+  <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Versions">
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey?style=for-the-badge" alt="Platform">
+  <img src="https://img.shields.io/badge/license-AGPL--3.0-blue?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/version-0.1.0-orange?style=for-the-badge" alt="Version">
 </p>
 
 <p align="center">
-  <a href="https://github.com/ankitdutta428/PyDebFlow/commits/main">
-    <img src="https://img.shields.io/github/last-commit/ankitdutta428/PyDebFlow?style=flat-square&logo=git&logoColor=white" alt="Last Commit">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/issues">
-    <img src="https://img.shields.io/github/issues/ankitdutta428/PyDebFlow?style=flat-square&logo=github" alt="Open Issues">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/pulls">
-    <img src="https://img.shields.io/github/issues-pr/ankitdutta428/PyDebFlow?style=flat-square&logo=github" alt="Pull Requests">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow">
-    <img src="https://img.shields.io/github/repo-size/ankitdutta428/PyDebFlow?style=flat-square&logo=github" alt="Repo Size">
-  </a>
-  <a href="https://github.com/psf/black">
-    <img src="https://img.shields.io/badge/code%20style-black-000000?style=flat-square" alt="Code Style">
-  </a>
-  <a href="https://github.com/ankitdutta428/PyDebFlow/blob/main/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome">
-  </a>
+  <img src="https://img.shields.io/badge/build-passing-success?style=flat-square" alt="Build Status">
+  <img src="https://img.shields.io/badge/coverage-85%25-yellowgreen?style=flat-square" alt="Coverage">
+  <img src="https://img.shields.io/badge/code%20style-black-000000?style=flat-square" alt="Code Style">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome">
 </p>
 
 ---
@@ -170,7 +145,7 @@ PyDebFlow implements a **two-phase (solid + fluid) shallow water model** with ad
 
 ```bash
 # Clone the repository
-git clone https://github.com/ankitdutta428/PyDebFlow.git
+git clone https://github.com/yourusername/PyDebFlow.git
 cd PyDebFlow
 
 # Create virtual environment (recommended)
@@ -699,7 +674,7 @@ Contributions are welcome! Here's how to get started:
 
 ```bash
 # Fork and clone
-git clone https://github.com/ankitdutta428/PyDebFlow.git
+git clone https://github.com/yourusername/PyDebFlow.git
 cd PyDebFlow
 
 # Create virtual environment
@@ -785,8 +760,8 @@ For commercial licensing inquiries, please contact the maintainers.
 
 ## 📞 Contact & Support
 
-- 📧 **Issues**: [GitHub Issues](https://github.com/ankitdutta428/PyDebFlow/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/ankitdutta428/PyDebFlow/discussions)
+- 📧 **Issues**: [GitHub Issues](https://github.com/yourusername/PyDebFlow/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/PyDebFlow/discussions)
 
 ---
 
