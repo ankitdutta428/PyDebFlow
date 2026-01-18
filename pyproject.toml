@@ -1,0 +1,122 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pydebflow"
+version = "0.1.0"
+description = "Advanced Two-Phase Mass Flow Simulation Software for debris flows, avalanches, and lahars"
+readme = "README.md"
+license = {text = "AGPL-3.0"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Ankit Dutta", email = "masterankit150@gmail.com"}
+]
+maintainers = [
+    {name = "Ankit Dutta", email = "masterankit150@gmail.com"}
+]
+keywords = [
+    "debris-flow",
+    "avalanche",
+    "lahar",
+    "geophysics",
+    "simulation",
+    "mass-flow",
+    "hydrology",
+    "geoscience",
+    "two-phase-flow",
+    "numerical-simulation"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+
+dependencies = [
+    "numpy>=1.24.0",
+    "numba>=0.57.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "pyyaml>=6.0.0",
+]
+
+[project.optional-dependencies]
+gui = [
+    "PyQt6>=6.5.0",
+]
+visualization = [
+    "pyvista>=0.42.0",
+    "imageio>=2.31.0",
+    "imageio-ffmpeg>=0.4.0",
+]
+raster = [
+    "rasterio>=1.3.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "build>=0.10.0",
+    "twine>=4.0.0",
+]
+all = [
+    "pydebflow[gui,visualization,raster,dev]",
+]
+
+[project.scripts]
+pydebflow = "pydebflow:main"
+
+[project.urls]
+Homepage = "https://github.com/ankitdutta428/PyDebFlow"
+Documentation = "https://github.com/ankitdutta428/PyDebFlow#readme"
+Repository = "https://github.com/ankitdutta428/PyDebFlow.git"
+Issues = "https://github.com/ankitdutta428/PyDebFlow/issues"
+Changelog = "https://github.com/ankitdutta428/PyDebFlow/releases"
+
+[tool.setuptools]
+packages = ["pydebflow", "pydebflow.core", "pydebflow.physics", "pydebflow.io", "pydebflow.visualization", "pydebflow.gui"]
+package-dir = {"pydebflow" = "src"}
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

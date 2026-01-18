@@ -144,7 +144,23 @@ PyDebFlow implements a **two-phase (solid + fluid) shallow water model** with ad
 - **pip** package manager
 - **Git** (for cloning)
 
-### Method 1: Quick Install with Scripts (Recommended)
+### Method 1: Install from PyPI (Easiest)
+
+```bash
+# Basic installation
+pip install pydebflow
+
+# With visualization support (3D viewer, animations)
+pip install pydebflow[visualization]
+
+# With GUI support
+pip install pydebflow[gui]
+
+# Full installation (all features)
+pip install pydebflow[all]
+```
+
+### Method 2: Quick Install with Scripts
 
 ```bash
 # Clone the repository
