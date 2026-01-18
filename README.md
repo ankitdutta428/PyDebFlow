@@ -17,18 +17,21 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tests-passing-brightgreen?style=for-the-badge" alt="Tests Passing">
-  <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Versions">
-  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey?style=for-the-badge" alt="Platform">
-  <img src="https://img.shields.io/badge/license-AGPL--3.0-blue?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/version-0.1.0-orange?style=for-the-badge" alt="Version">
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/github/stars/ankitdutta428/PyDebFlow?style=flat-square&color=ff69b4" alt="Stars"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow/actions/workflows/build.yml"><img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/build.yml?style=flat-square&label=build" alt="Build Status"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/ankitdutta428/PyDebFlow/tests.yml?style=flat-square&label=tests" alt="Tests Status"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ankitdutta428/PyDebFlow?style=flat-square&color=blue" alt="License"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/badge/website-online-brightgreen?style=flat-square" alt="Website"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow/releases"><img src="https://img.shields.io/github/v/release/ankitdutta428/PyDebFlow?style=flat-square&color=green" alt="Release"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4?style=flat-square" alt="Contributor Covenant"></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/build-passing-success?style=flat-square" alt="Build Status">
-  <img src="https://img.shields.io/badge/coverage-85%25-yellowgreen?style=flat-square" alt="Coverage">
-  <img src="https://img.shields.io/badge/code%20style-black-000000?style=flat-square" alt="Code Style">
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome">
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/github/last-commit/ankitdutta428/PyDebFlow?style=flat-square" alt="Last Commit"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow/issues"><img src="https://img.shields.io/github/issues/ankitdutta428/PyDebFlow?style=flat-square" alt="Issues"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?style=flat-square&logo=python&logoColor=white" alt="Python Versions"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/badge/code%20style-black-000000?style=flat-square" alt="Code Style"></a>
+  <a href="https://github.com/ankitdutta428/PyDebFlow"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs Welcome"></a>
 </p>
 
 ---
