@@ -20,7 +20,7 @@
   <img src="https://img.shields.io/badge/tests-passing-brightgreen?style=for-the-badge" alt="Tests Passing">
   <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Versions">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey?style=for-the-badge" alt="Platform">
-  <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/license-AGPL--3.0-blue?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/version-0.1.0-orange?style=for-the-badge" alt="Version">
 </p>
 
@@ -71,7 +71,7 @@ PyDebFlow implements a **two-phase (solid + fluid) shallow water model** with ad
 
 | Feature | PyDebFlow | r.avaflow | RAMMS |
 |---------|-----------|-----------|-------|
-| **Open Source** | ✅ MIT License | ✅ GPL | ❌ Commercial |
+| **Open Source** | ✅ AGPL-3.0 | ✅ GPL | ❌ Commercial |
 | **Two-Phase Flow** | ✅ | ✅ | ❌ |
 | **Python API** | ✅ Native | ❌ GRASS GIS | ❌ |
 | **Modern GUI** | ✅ PyQt6 | ❌ | ✅ |
@@ -736,19 +736,15 @@ PyDebFlow is inspired by and draws concepts from:
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)** - see the [LICENSE](LICENSE) file for details.
 
-```
-MIT License
+The AGPL-3.0 license ensures that:
+- ✅ You can freely use, modify, and distribute the software
+- ✅ Modified versions must also be open-sourced under AGPL-3.0
+- ✅ If used in a network service, source code must be made available to users
+- ✅ Proper attribution must be maintained
 
-Copyright (c) 2025 PyDebFlow Contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software...
-```
+For commercial licensing inquiries, please contact the maintainers.
 
 ---
 
