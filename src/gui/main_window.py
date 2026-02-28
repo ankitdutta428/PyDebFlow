@@ -27,11 +27,12 @@ class SimulationWorker(QThread):
     finished = pyqtSignal(object)  # outputs list
     error = pyqtSignal(str)
     
-    def __init__(self, terrain, params, t_end):
+    def __init__(self, terrain, params, t_end, release_zone=None):
         super().__init__()
         self.terrain = terrain
         self.params = params
         self.t_end = t_end
+        self.release_zone = release_zone
         self._is_cancelled = False
     
     def run(self):
@@ -47,11 +48,15 @@ class SimulationWorker(QThread):
             
             # Initial state
             state = FlowState.zeros((self.terrain.rows, self.terrain.cols))
-            release = self.terrain.create_release_zone(
-                self.terrain.rows // 5,
-                self.terrain.cols // 2,
-                10, 5.0
-            )
+            if self.release_zone is not None:
+                release = self.release_zone
+            else:
+                # Fallback: auto-assign circular release zone
+                release = self.terrain.create_release_zone(
+                    self.terrain.rows // 5,
+                    self.terrain.cols // 2,
+                    10, 5.0
+                )
             state.h_solid = release * 0.7
             state.h_fluid = release * 0.3
             
@@ -84,6 +89,7 @@ class MainWindow(QMainWindow):
         self.terrain = None
         self.outputs = None
         self.worker = None
+        self.release_zone = None
         
         self._setup_ui()
         self._create_menu()
@@ -270,6 +276,7 @@ class MainWindow(QMainWindow):
         <h3>Quick Start:</h3>
         <ol>
             <li><b>Load DEM</b> - Click "Load DEM..." or use "Synthetic" for testing</li>
+            <li><b>Mark Release Zone</b> - Use the 🎯 Release Zone tab to click a point or draw a polygon on the terrain</li>
             <li><b>Configure</b> - Adjust flow parameters or use a preset</li>
             <li><b>Simulate</b> - Click "Run Simulation"</li>
             <li><b>Visualize</b> - View 3D animation or export video</li>
@@ -282,6 +289,12 @@ class MainWindow(QMainWindow):
         info_layout.addWidget(welcome)
         
         self.viz_tabs.addTab(info_widget, "ℹ️ Info")
+        
+        # Release Zone tab  
+        from src.gui.release_zone_widget import ReleaseZoneWidget
+        self.release_zone_widget = ReleaseZoneWidget()
+        self.release_zone_widget.release_zone_changed.connect(self._on_release_zone_changed)
+        self.viz_tabs.addTab(self.release_zone_widget, "🎯 Release Zone")
         
         # Log tab
         self.log_text = QTextEdit()
@@ -297,6 +310,15 @@ class MainWindow(QMainWindow):
         results_layout = QVBoxLayout(results_widget)
         results_layout.addWidget(self.results_label)
         self.viz_tabs.addTab(results_widget, "📊 Results")
+        
+        # Cross-Section Profile tab
+        from src.gui.analysis_widgets import CrossSectionWidget, HydrographWidget
+        self.cross_section_widget = CrossSectionWidget()
+        self.viz_tabs.addTab(self.cross_section_widget, "📏 Profile")
+        
+        # Hydrograph tab
+        self.hydrograph_widget = HydrographWidget()
+        self.viz_tabs.addTab(self.hydrograph_widget, "📈 Hydrograph")
         
         layout.addWidget(self.viz_tabs)
         
@@ -575,9 +597,13 @@ class MainWindow(QMainWindow):
                     f"Elev: {self.terrain.elevation.min():.0f} - {self.terrain.elevation.max():.0f}m"
                 )
                 
-                self.btn_run.setEnabled(True)
+                # Show the release zone widget with loaded terrain
+                self.release_zone_widget.set_terrain(self.terrain)
+                self.viz_tabs.setCurrentWidget(self.release_zone_widget)
+                
                 self._log(f"✓ Loaded: {filepath}")
-                self.statusBar.showMessage(f"Loaded: {Path(filepath).name}")
+                self._log("  → Mark a release zone on the terrain to enable simulation")
+                self.statusBar.showMessage(f"Loaded: {Path(filepath).name} — Mark release zone")
                 
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to load DEM:\n{e}")
@@ -597,9 +623,13 @@ class MainWindow(QMainWindow):
             f"Slope: 25°"
         )
         
-        self.btn_run.setEnabled(True)
+        # Show the release zone widget with synthetic terrain
+        self.release_zone_widget.set_terrain(self.terrain)
+        self.viz_tabs.setCurrentWidget(self.release_zone_widget)
+        
         self._log("✓ Created synthetic terrain")
-        self.statusBar.showMessage("Synthetic terrain created")
+        self._log("  → Mark a release zone on the terrain to enable simulation")
+        self.statusBar.showMessage("Synthetic terrain created — Mark release zone")
     
     def _apply_preset(self, preset: str):
         """Apply parameter preset."""
@@ -618,10 +648,31 @@ class MainWindow(QMainWindow):
             self.xi_spin.setValue(xi)
             self._log(f"Applied preset: {preset}")
     
+    def _on_release_zone_changed(self, release_zone):
+        """Handle release zone update from the interactive widget."""
+        self.release_zone = release_zone
+        
+        if release_zone is not None and self.terrain is not None:
+            self.btn_run.setEnabled(True)
+            vol = float(release_zone.sum() * self.terrain.cell_size**2)
+            self._log(f"✓ Release zone set (volume ≈ {vol:.0f} m³)")
+            self.statusBar.showMessage("Release zone set — Ready to simulate")
+        else:
+            self.btn_run.setEnabled(False)
+            self.statusBar.showMessage("Mark a release zone to enable simulation")
+    
     def _run_simulation(self):
         """Run simulation."""
         if self.terrain is None:
             QMessageBox.warning(self, "No Terrain", "Please load a DEM first.")
+            return
+        
+        if self.release_zone is None:
+            QMessageBox.warning(
+                self, "No Release Zone",
+                "Please mark a release zone on the terrain first.\n\n"
+                "Use the 🎯 Release Zone tab to click a point or draw a polygon."
+            )
             return
         
         params = {
@@ -633,7 +684,8 @@ class MainWindow(QMainWindow):
         }
         
         self.worker = SimulationWorker(
-            self.terrain, params, self.time_spin.value()
+            self.terrain, params, self.time_spin.value(),
+            release_zone=self.release_zone
         )
         self.worker.progress.connect(self._on_progress)
         self.worker.finished.connect(self._on_finished)
@@ -681,6 +733,11 @@ class MainWindow(QMainWindow):
                 f"<p><b>Max flow height:</b> {max_h:.2f} m</p>"
                 f"<p><b>Final volume:</b> {(final.h_solid.sum() + final.h_fluid.sum()) * self.terrain.cell_size**2:.0f} m³</p>"
             )
+            
+            # Feed data to analysis widgets
+            self.cross_section_widget.set_data(self.terrain, outputs)
+            self.hydrograph_widget.set_data(self.terrain, outputs)
+            
             self.viz_tabs.setCurrentIndex(2)  # Results tab
     
     def _on_error(self, error: str):
@@ -691,7 +748,7 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(self, "Simulation Error", error)
     
     def _show_3d_view(self):
-        """Show 3D visualization."""
+        """Show 3D visualization with time slider."""
         if self.outputs is None:
             QMessageBox.warning(self, "No Results", "Run a simulation first.")
             return
@@ -707,12 +764,8 @@ class MainWindow(QMainWindow):
             
             viewer.load_snapshots(snapshots, times)
             
-            # Show max height
-            max_h = np.zeros_like(self.terrain.elevation)
-            for snap in snapshots:
-                max_h = np.maximum(max_h, snap)
-            
-            viewer.show_static(max_h, "PyDebFlow - 3D View")
+            # Show interactive 3D view with time slider
+            viewer.show_with_slider("PyDebFlow - 3D View")
             
         except Exception as e:
             QMessageBox.critical(self, "Error", f"3D view failed:\n{e}")

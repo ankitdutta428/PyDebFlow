@@ -84,6 +84,83 @@ class Terrain:
         
         return release
     
+    def create_polygon_release_zone(self, vertices: list, height: float,
+                                     smooth: bool = True) -> np.ndarray:
+        """
+        Create a release zone from a polygon defined by vertices.
+        
+        Args:
+            vertices: List of (row, col) tuples defining the polygon boundary.
+                      At least 3 vertices required.
+            height: Maximum release height in meters.
+            smooth: If True, apply parabolic falloff from centroid.
+                    If False, uniform height within polygon.
+        
+        Returns:
+            Release height array with shape (rows, cols).
+        """
+        if len(vertices) < 3:
+            raise ValueError("Polygon requires at least 3 vertices")
+        
+        from matplotlib.path import Path as MplPath
+        
+        # Create grid of all cell coordinates
+        rows_idx, cols_idx = np.mgrid[0:self.rows, 0:self.cols]
+        points = np.column_stack([rows_idx.ravel(), cols_idx.ravel()])
+        
+        # Create polygon path and test containment
+        poly_path = MplPath(vertices)
+        mask = poly_path.contains_points(points).reshape(self.rows, self.cols)
+        
+        return self.create_mask_release_zone(mask, height, smooth=smooth)
+    
+    def create_mask_release_zone(self, mask: np.ndarray, height: float,
+                                  smooth: bool = True) -> np.ndarray:
+        """
+        Create a release zone from a boolean mask.
+        
+        Args:
+            mask: Boolean array of shape (rows, cols). True = release zone.
+            height: Maximum release height in meters.
+            smooth: If True, apply parabolic falloff from centroid.
+                    If False, uniform height within mask.
+        
+        Returns:
+            Release height array with shape (rows, cols).
+        """
+        if mask.shape != (self.rows, self.cols):
+            raise ValueError(
+                f"Mask shape {mask.shape} doesn't match terrain ({self.rows}, {self.cols})"
+            )
+        
+        release = np.zeros_like(self.elevation)
+        
+        if not mask.any():
+            return release
+        
+        if smooth:
+            # Compute centroid of masked region
+            masked_coords = np.argwhere(mask)
+            centroid_i = masked_coords[:, 0].mean()
+            centroid_j = masked_coords[:, 1].mean()
+            
+            # Max distance from centroid to any masked cell
+            dists = np.sqrt(
+                (masked_coords[:, 0] - centroid_i)**2 +
+                (masked_coords[:, 1] - centroid_j)**2
+            )
+            max_dist = dists.max() if dists.max() > 0 else 1.0
+            
+            # Apply parabolic falloff
+            for idx in range(len(masked_coords)):
+                i, j = masked_coords[idx]
+                d = dists[idx]
+                release[i, j] = height * (1 - (d / max_dist)**2)
+        else:
+            release[mask] = height
+        
+        return release
+    
     @classmethod
     def from_geotiff(cls, filepath: str) -> 'Terrain':
         """Load terrain from GeoTIFF file."""
