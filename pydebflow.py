@@ -37,6 +37,15 @@ def cmd_simulate(args):
             visualize=not args.no_viz
         )
     elif args.dem:
+        # Parse polygon vertices if provided
+        release_vertices = None
+        if hasattr(args, 'release_polygon') and args.release_polygon:
+            coords = [int(x.strip()) for x in args.release_polygon.split(',')]
+            if len(coords) % 2 != 0:
+                print("Error: --release-polygon must have even number of values")
+                sys.exit(1)
+            release_vertices = [(coords[i], coords[i+1]) for i in range(0, len(coords), 2)]
+        
         run_dem_simulation(
             dem_file=args.dem,
             output_dir=args.output,
@@ -45,6 +54,7 @@ def cmd_simulate(args):
             release_j=args.release_col,
             release_radius=args.release_radius,
             release_height=args.release_height,
+            release_vertices=release_vertices,
             animate_3d=args.animate and not args.no_viz,
             export_video=args.video
         )
@@ -162,6 +172,9 @@ def main():
                              help='Release zone radius in cells (default: 10)')
     sim_release.add_argument('--release-height', type=float, default=5.0,
                              help='Release zone height in meters (default: 5.0)')
+    sim_release.add_argument('--release-polygon', type=str, metavar='VERTICES',
+                             help='Polygon release zone as comma-separated row,col pairs '
+                                  '(e.g. "10,20,10,40,30,40,30,20")')
     
     sim_viz = sim_parser.add_argument_group('Visualization')
     sim_viz.add_argument('--animate', '-a', action='store_true',

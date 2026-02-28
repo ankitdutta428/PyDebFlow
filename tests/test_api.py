@@ -63,6 +63,34 @@ class TestTerrainAPI:
         assert release.shape == (50, 40)
         assert release.max() <= 3.0
         assert release.max() > 0.0
+    
+    def test_create_polygon_release_zone(self):
+        """Test creating a polygon release zone."""
+        from src import Terrain
+        
+        terrain = Terrain.create_synthetic_slope(rows=50, cols=40)
+        vertices = [(10, 10), (10, 30), (25, 30), (25, 10)]
+        release = terrain.create_polygon_release_zone(vertices, height=4.0)
+        
+        assert release.shape == (50, 40)
+        assert release.max() <= 4.0
+        assert release.max() > 0.0
+        # Center of polygon should have material
+        assert release[17, 20] > 0
+    
+    def test_create_mask_release_zone(self):
+        """Test creating a mask-based release zone."""
+        from src import Terrain
+        import numpy as np
+        
+        terrain = Terrain.create_synthetic_slope(rows=50, cols=40)
+        mask = np.zeros((50, 40), dtype=bool)
+        mask[5:15, 10:25] = True
+        release = terrain.create_mask_release_zone(mask, height=5.0)
+        
+        assert release.shape == (50, 40)
+        assert release.max() <= 5.0
+        assert release.max() > 0.0
 
 
 class TestFlowModelAPI:
