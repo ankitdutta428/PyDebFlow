@@ -272,6 +272,7 @@ def run_dem_simulation(dem_file: str,
                         release_j: int = None,
                         release_radius: int = 10,
                         release_height: float = 5.0,
+                        release_vertices: list = None,
                         animate_3d: bool = True,
                         export_video: bool = False) -> None:
     """
@@ -284,6 +285,7 @@ def run_dem_simulation(dem_file: str,
         release_i, release_j: Release zone center (auto if None)
         release_radius: Release zone radius in cells
         release_height: Initial release height (m)
+        release_vertices: List of (row, col) tuples for polygon release zone
         animate_3d: Show 3D animation
         export_video: Export animation to MP4
     """
@@ -297,12 +299,6 @@ def run_dem_simulation(dem_file: str,
     print(f"  Grid: {terrain.rows} x {terrain.cols} cells")
     print(f"  Cell size: {terrain.cell_size} m")
     print(f"  Elevation range: {terrain.elevation.min():.1f} to {terrain.elevation.max():.1f} m")
-    
-    # Auto-detect release zone if not specified
-    if release_i is None:
-        release_i = terrain.rows // 5  # Upper portion
-    if release_j is None:
-        release_j = terrain.cols // 2  # Center
     
     # Setup model
     print("\n[2/6] Configuring flow model...")
@@ -319,9 +315,26 @@ def run_dem_simulation(dem_file: str,
     solver = NOCTVDSolver(terrain, model, solver_config)
     
     # Initialize release
-    print(f"\n[3/6] Creating release zone at ({release_i}, {release_j})...")
+    print(f"\n[3/6] Creating release zone...")
     state = FlowState.zeros((terrain.rows, terrain.cols))
-    release = terrain.create_release_zone(release_i, release_j, release_radius, release_height)
+    
+    if release_vertices is not None and len(release_vertices) >= 3:
+        # Polygon release zone
+        release = terrain.create_polygon_release_zone(
+            vertices=release_vertices,
+            height=release_height,
+            smooth=True
+        )
+        print(f"  Polygon release with {len(release_vertices)} vertices")
+    else:
+        # Circular release zone (original behavior)
+        if release_i is None:
+            release_i = terrain.rows // 5
+        if release_j is None:
+            release_j = terrain.cols // 2
+        release = terrain.create_release_zone(release_i, release_j, release_radius, release_height)
+        print(f"  Circular release at ({release_i}, {release_j}), radius={release_radius}")
+    
     state.h_solid = release * 0.7
     state.h_fluid = release * 0.3
     
@@ -457,7 +470,10 @@ Examples:
     release_group.add_argument('--release-radius', type=int, default=10,
                                help='Release zone radius in cells (default: 10)')
     release_group.add_argument('--release-height', type=float, default=5.0,
-                               help='Release zone height in meters (default: 5.0)')
+                                help='Release zone height in meters (default: 5.0)')
+    release_group.add_argument('--release-polygon', type=str, metavar='VERTICES',
+                                help='Polygon release zone as comma-separated row,col pairs '
+                                     '(e.g. "10,20,10,40,30,40,30,20")')
     
     # Visualization
     viz_group = parser.add_argument_group('Visualization')
@@ -485,6 +501,18 @@ Examples:
     
     # DEM simulation
     if args.dem_file:
+        # Parse polygon vertices if provided
+        release_vertices = None
+        if args.release_polygon:
+            coords = [int(x.strip()) for x in args.release_polygon.split(',')]
+            if len(coords) % 2 != 0:
+                print("Error: --release-polygon must have even number of values (row,col pairs)")
+                sys.exit(1)
+            release_vertices = [(coords[i], coords[i+1]) for i in range(0, len(coords), 2)]
+            if len(release_vertices) < 3:
+                print("Error: --release-polygon requires at least 3 vertex pairs")
+                sys.exit(1)
+        
         run_dem_simulation(
             dem_file=args.dem_file,
             output_dir=args.output_dir,
@@ -493,6 +521,7 @@ Examples:
             release_j=args.release_col,
             release_radius=args.release_radius,
             release_height=args.release_height,
+            release_vertices=release_vertices,
             animate_3d=args.animate_3d and not args.no_viz,
             export_video=args.export_video
         )

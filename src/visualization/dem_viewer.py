@@ -180,6 +180,177 @@ class DEMViewer3D:
         # Show
         plotter.show()
     
+    def show_with_slider(self, title: str = "PyDebFlow - 3D Flow Viewer") -> None:
+        """
+        Show interactive 3D view with a time slider.
+        
+        Users can drag the slider to view the flow at any timestep.
+        The flow mesh updates in real-time as the slider moves.
+        
+        Keyboard controls:
+            Space: Play/Pause auto-playback
+            Left Arrow: Previous frame
+            Right Arrow: Next frame
+        
+        Requires snapshots to be loaded via load_snapshots() first.
+        """
+        if not self.flow_snapshots:
+            raise ValueError("No snapshots loaded. Use load_snapshots() first.")
+        
+        pv = self._ensure_pyvista()
+        
+        n_frames = len(self.flow_snapshots)
+        max_height = max(s.max() for s in self.flow_snapshots)
+        
+        # Create plotter
+        plotter = pv.Plotter(title=title, window_size=(1400, 900))
+        plotter.set_background('white', top='lightblue')
+        
+        # ── Terrain ─────────────────────────────────────────
+        terrain_mesh = self._create_terrain_mesh(pv)
+        hillshade = self._compute_hillshade()
+        terrain_mesh['hillshade'] = hillshade.flatten(order='F')
+        
+        plotter.add_mesh(
+            terrain_mesh,
+            scalars='hillshade',
+            cmap='gray',
+            show_scalar_bar=False,
+            smooth_shading=True,
+            name='terrain'
+        )
+        
+        # ── Initial flow frame ──────────────────────────────
+        initial_flow = self.flow_snapshots[0]
+        flow_mesh = self._create_flow_mesh(initial_flow, pv)
+        
+        if flow_mesh is not None:
+            plotter.add_mesh(
+                flow_mesh,
+                scalars='flow_height',
+                cmap='YlOrRd',
+                clim=[0, max_height],
+                opacity=0.85,
+                smooth_shading=True,
+                scalar_bar_args={
+                    'title': 'Flow Height (m)',
+                    'vertical': True,
+                    'position_x': 0.9,
+                    'position_y': 0.3,
+                    'width': 0.08,
+                    'height': 0.4,
+                },
+                name='flow'
+            )
+        
+        # ── Time text ───────────────────────────────────────
+        plotter.add_text(
+            f"t = {self.snapshot_times[0]:.1f} s  [Frame 1/{n_frames}]",
+            position='upper_left',
+            font_size=12,
+            color='black',
+            name='time_label'
+        )
+        
+        # ── Camera ──────────────────────────────────────────
+        plotter.camera_position = 'iso'
+        plotter.camera.zoom(0.8)
+        plotter.show_axes()
+        
+        # ── State for callbacks ─────────────────────────────
+        viewer_self = self  # Capture self for closures
+        state = {'frame': 0, 'playing': False}
+        
+        def update_to_frame(frame_idx):
+            """Update the 3D view to show a specific frame."""
+            frame_idx = int(round(frame_idx))
+            frame_idx = max(0, min(frame_idx, n_frames - 1))
+            state['frame'] = frame_idx
+            
+            snapshot = viewer_self.flow_snapshots[frame_idx]
+            t = viewer_self.snapshot_times[frame_idx]
+            
+            # Remove old flow and add new one
+            new_flow = viewer_self._create_flow_mesh(snapshot, pv)
+            if new_flow is not None:
+                plotter.add_mesh(
+                    new_flow,
+                    scalars='flow_height',
+                    cmap='YlOrRd',
+                    clim=[0, max_height],
+                    opacity=0.85,
+                    smooth_shading=True,
+                    name='flow'
+                )
+            else:
+                # No flow in this frame — remove the actor
+                try:
+                    plotter.remove_actor('flow')
+                except Exception:
+                    pass
+            
+            # Update time text
+            plotter.add_text(
+                f"t = {t:.1f} s  [Frame {frame_idx + 1}/{n_frames}]",
+                position='upper_left',
+                font_size=12,
+                color='black',
+                name='time_label'
+            )
+        
+        # ── Slider widget ───────────────────────────────────
+        plotter.add_slider_widget(
+            update_to_frame,
+            rng=[0, n_frames - 1],
+            value=0,
+            title="Time Step",
+            pointa=(0.15, 0.07),
+            pointb=(0.85, 0.07),
+            style='modern',
+            fmt="%.0f",
+        )
+        
+        # ── Keyboard controls (optional, may not be available in older PyVista) ──
+        try:
+            def on_key_space():
+                """Toggle auto-play."""
+                state['playing'] = not state['playing']
+            
+            def on_key_right():
+                """Next frame."""
+                new_idx = min(state['frame'] + 1, n_frames - 1)
+                update_to_frame(new_idx)
+                plotter.render()
+            
+            def on_key_left():
+                """Previous frame."""
+                new_idx = max(state['frame'] - 1, 0)
+                update_to_frame(new_idx)
+                plotter.render()
+            
+            plotter.add_key_event('space', on_key_space)
+            plotter.add_key_event('Right', on_key_right)
+            plotter.add_key_event('Left', on_key_left)
+        except AttributeError:
+            pass  # Older PyVista — slider still works
+        
+        # ── Auto-play callback (optional, may not be available in older PyVista) ──
+        try:
+            def auto_play_tick():
+                """Advance frame if playing."""
+                if state['playing']:
+                    new_idx = state['frame'] + 1
+                    if new_idx >= n_frames:
+                        new_idx = 0  # Loop
+                    update_to_frame(new_idx)
+            
+            plotter.add_callback(auto_play_tick, interval=300)
+        except AttributeError:
+            pass  # Older PyVista — slider still works without auto-play
+        
+        # ── Show ────────────────────────────────────────────
+        plotter.show()
+    
     def show_animation(self, title: str = "PyDebFlow - Debris Flow Animation") -> None:
         """
         Show animated debris flow visualization.
